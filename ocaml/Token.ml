@@ -1,5 +1,5 @@
 module Token = struct
-  type tokenType =
+  type token_type =
     | LEFT_PAREN
     | RIGHT_PAREN
     | LEFT_BRACE
@@ -45,17 +45,17 @@ module Token = struct
     | WHILE
     | EOF
 
-  type literalType = IDENTIFIER | STRING | NUMBER
+  type literal_type = IDENTIFIER | STRING | NUMBER
 
   type token = TokenRecord of {
     lexeme: string;
-    literal: literalType option;
+    literal: literal_type option;
     line: int;
-    tokenType: tokenType;
+    token_type: token_type;
   }
 
 
-  let tokenLiteralToString literal =
+  let token_literal_to_string literal =
     match literal with
     | None -> ""
     | Some IDENTIFIER -> "IDENTIFIER"
@@ -63,8 +63,8 @@ module Token = struct
     | Some NUMBER-> "NUMBER"
 
 
-  let tokenTypeToString tokenType =
-    match tokenType with
+  let token_type_to_string token_type =
+    match token_type with
     | LEFT_PAREN  -> "LEFT_PAREN "
     | RIGHT_PAREN -> "RIGHT_PAREN"
     | LEFT_BRACE -> "LEFT_BRACE"
@@ -110,8 +110,8 @@ module Token = struct
     | WHILE -> "WHILE"
     | EOF -> "EOF"
 
-  let toString token =
+  let to_string token =
     match token with
-    | TokenRecord {tokenType; lexeme; literal} ->
-        String.concat " " [tokenTypeToString tokenType; lexeme; tokenLiteralToString literal]
+    | TokenRecord {token_type; lexeme; literal} ->
+        String.concat " " [token_type_to_string token_type; lexeme; token_literal_to_string literal]
 end
