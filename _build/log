@@ -1,0 +1,13 @@
+# dune runtest
+# OCAMLPARAM: unset
+$ /usr/bin/getconf _NPROCESSORS_ONLN > /var/folders/3c/s_d7gp6j6z3314ss8dxm6g180000gn/T/dune7930db.output 2> /dev/null
+$ /Users/nikhilthomas/.opam/default/bin/ocamlc.opt -config > /var/folders/3c/s_d7gp6j6z3314ss8dxm6g180000gn/T/dune105710.output
+$ (cd _build/default && /Users/nikhilthomas/.opam/default/bin/ocamldep.opt -modules -impl ocaml/scanner_test.ml) > _build/default/ocaml/.scanner_test.eobjs/scanner_test.ml.d
+$ (cd _build/default && /Users/nikhilthomas/.opam/default/bin/ocamlc.opt -w @a-4-29-40-41-42-44-45-48-58-59-60-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -bin-annot -I ocaml/.scanner_test.eobjs/byte -I /Users/nikhilthomas/.opam/default/lib/bytes -I /Users/nikhilthomas/.opam/default/lib/oUnit -I /Users/nikhilthomas/.opam/default/lib/ounit -no-alias-deps -opaque -o ocaml/.scanner_test.eobjs/byte/scanner_test.cmo -c -impl ocaml/scanner_test.ml)
+$ (cd _build/default && /Users/nikhilthomas/.opam/default/bin/ocamlopt.opt -w @a-4-29-40-41-42-44-45-48-58-59-60-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -I ocaml/.scanner_test.eobjs/byte -I ocaml/.scanner_test.eobjs/native -I /Users/nikhilthomas/.opam/default/lib/bytes -I /Users/nikhilthomas/.opam/default/lib/oUnit -I /Users/nikhilthomas/.opam/default/lib/ounit -intf-suffix .ml -no-alias-deps -opaque -o ocaml/.scanner_test.eobjs/native/scanner_test.cmx -c -impl ocaml/scanner_test.ml)
+$ (cd _build/default && /Users/nikhilthomas/.opam/default/bin/ocamlopt.opt -w @a-4-29-40-41-42-44-45-48-58-59-60-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -o ocaml/scanner_test.exe -I /Users/nikhilthomas/.opam/default/lib/bytes -I /Users/nikhilthomas/.opam/default/lib/oUnit -I /Users/nikhilthomas/.opam/default/lib/ounit /Users/nikhilthomas/.opam/default/lib/ocaml/unix.cmxa /Users/nikhilthomas/.opam/default/lib/oUnit/oUnitAdvanced.cmxa /Users/nikhilthomas/.opam/default/lib/ounit/oUnit.cmxa ocaml/.scanner_test.eobjs/native/token.cmx ocaml/.scanner_test.eobjs/native/scanner.cmx ocaml/.scanner_test.eobjs/native/scanner_test.cmx)
+$ (cd _build/default/ocaml && ./scanner_test.exe)
+> .......[line 1] Error: Unexpected character.
+> ......
+> Ran: 13 tests in: 0.11 seconds.
+> OK
