@@ -9,6 +9,7 @@ let testContext1 : Scanner.scanner_context = {
   current_character = None;
   source = "()";
   tokens = [];
+  had_error = false;
 }
 
 let testContext2 : Scanner.scanner_context = {
@@ -18,6 +19,7 @@ let testContext2 : Scanner.scanner_context = {
   current_character = None;
   source = "";
   tokens = [];
+  had_error = false;
 }
 
 let testContext3 : Scanner.scanner_context = {
@@ -34,6 +36,7 @@ let testContext3 : Scanner.scanner_context = {
       token_type = Token.LEFT_PAREN;
     }
   ];
+  had_error = false;
 }
 
 let testContext4 : Scanner.scanner_context = {
@@ -43,6 +46,7 @@ let testContext4 : Scanner.scanner_context = {
   current_character = None;
   source = "(";
   tokens = [];
+  had_error = false;
 }
 
 let tests = "test scanner" >::: [
@@ -134,7 +138,7 @@ let tests = "test scanner" >::: [
     assert_equal expected actual
   );
 
-  "scan_tokens - it adds EOF for a given context with an empty source into the tokens list" >:: (fun _ ->
+  "_scan_tokens - it adds EOF for a given context with an empty source into the tokens list" >:: (fun _ ->
     let expected = [
       Token.TokenRecord {
         literal = Some Token.IDENTIFIER;
@@ -144,11 +148,11 @@ let tests = "test scanner" >::: [
       };
 
     ] in
-    let actual = (Scanner.scan_tokens testContext2).tokens in
+    let actual = (Scanner._scan_tokens testContext2).tokens in
     assert_equal expected actual
   );
 
-  "scan_tokens - it adds all tokens for a given context with into the tokens list" >:: (fun _ ->
+  "_scan_tokens - it adds all tokens for a given context with into the tokens list" >:: (fun _ ->
     let expected = [
       Token.TokenRecord {
         literal = Some Token.IDENTIFIER;
@@ -169,7 +173,7 @@ let tests = "test scanner" >::: [
         token_type = Token.EOF
       };
     ] in
-    let actual = (Scanner.scan_tokens testContext1).tokens in
+    let actual = (Scanner._scan_tokens testContext1).tokens in
     assert_equal expected actual
   );
 

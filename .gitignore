@@ -10,3 +10,4 @@ node_modules/
 
 # build artifacts
 ocaml/_build
+*.byte

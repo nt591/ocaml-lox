@@ -1,0 +1,16 @@
+### Starting build.
+Backtrace:
+                      - Failed to build the target scanner_test.byte
+                          - Building scanner_test.byte:
+                              - Building scanner_test.cmo:
+                                  - Failed to build all of these:
+                                      - Building scanner_test.ml:
+                                          - Failed to build all of these:
+                                              - Building scanner_test.mly
+                                              - Building scanner_test.mll
+                                      - Building scanner_test.mli:
+                                          - Building scanner_test.mly
+                                      - Building scanner_test.mlpack
+                                      - Building scanner_test.mli:
+                                          - Building scanner_test.mly
+# Compilation unsuccessful.

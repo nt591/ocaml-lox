@@ -9,7 +9,15 @@ module Scanner = struct
     current_character: char option;
     source: string;
     tokens: Token.token list;
+    had_error: bool;
   }
+
+
+  let report ctx where message =
+    print_endline (String.concat "" ["[line "; (string_of_int ctx.line); "] Error"; where; ": "; message]);
+    {ctx with had_error = true}
+
+  let error ctx message = report ctx "" message
 
   let make_token token_type text literal ctx = {ctx with tokens =
     Token.TokenRecord {
@@ -47,7 +55,7 @@ module Scanner = struct
     | Some '+' -> add_token Token.PLUS (Some Token.IDENTIFIER) ctx
     | Some ';' -> add_token Token.SEMICOLON (Some Token.IDENTIFIER) ctx
     | Some '*' -> add_token Token.STAR (Some Token.IDENTIFIER) ctx
-    | _        -> ctx
+    | _        -> error ctx "Unexpected character."
 
 
   let is_at_end ctx = ctx.current >= String.length ctx.source
@@ -56,14 +64,9 @@ module Scanner = struct
     ctx with tokens = List.rev ctx.tokens
   }
 
-  let scan_tokens context =
+  let _scan_tokens context =
     let rec scan ctx =
       let at_end = is_at_end ctx in
-      print_int ctx.start;
-      print_endline " START ";
-      print_int ctx.current;
-      print_endline " CURRENT ";
-      print_endline ("AT_END " ^ string_of_bool at_end);
       match at_end with
       | true -> ctx |> add_EOF_token |> reverse_tokens
       | false ->
@@ -72,5 +75,17 @@ module Scanner = struct
         let c = scan_token new_ctx in
         scan c
     in scan context
+
+  let scan_tokens source =
+    let ctx = {
+      start = 0;
+      line = 1;
+      current = 1;
+      current_character = None;
+      source = source;
+      tokens = [];
+      had_error = false;
+    } in
+    _scan_tokens ctx
 
 end
