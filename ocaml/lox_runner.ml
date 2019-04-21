@@ -7,6 +7,6 @@ module LoxRunner = struct
       | [] -> ()
       | h::t -> match h with
         (* for some reason needed to match on type to get out the type *)
-       | TokenRecord a -> print_endline a.lexeme; _run {ctx with tokens = t}
+       | TokenRecord a -> _run {ctx with tokens = t}
     in _run (Scanner.scan_tokens source)
 end

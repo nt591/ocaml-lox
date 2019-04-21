@@ -30,7 +30,7 @@ module Scanner = struct
 
   let advance ctx =
     {ctx with current = ctx.current + 1; current_character = (
-      try Some (String.get ctx.source ctx.current) with Invalid_argument s -> None
+      try Some (String.get ctx.source ctx.current) with Invalid_argument _ -> None
     )}
 
   let add_token token_type literal context =

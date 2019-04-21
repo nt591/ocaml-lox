@@ -112,6 +112,6 @@ module Token = struct
 
   let to_string token =
     match token with
-    | TokenRecord {token_type; lexeme; literal} ->
+    | TokenRecord {token_type; lexeme; literal; _} ->
         String.concat " " [token_type_to_string token_type; lexeme; token_literal_to_string literal]
 end
