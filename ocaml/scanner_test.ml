@@ -36,8 +36,17 @@ let testContext3 : Scanner.scanner_context = {
   ];
 }
 
+let testContext4 : Scanner.scanner_context = {
+  start = 0;
+  current = 0;
+  line = 1;
+  current_character = None;
+  source = "(";
+  tokens = [];
+}
+
 let tests = "test scanner" >::: [
-  (* "advance - it returns context with current + 1" >:: (fun _ ->
+  "advance - it returns context with current + 1" >:: (fun _ ->
     let expected = 1 in
     let actual = (Scanner.advance testContext1).current
     in assert_equal expected actual
@@ -57,7 +66,7 @@ let tests = "test scanner" >::: [
 
   "add_token - it adds a token to context based on a passed in string" >:: (fun _ ->
     let c = Scanner.advance testContext1 in
-    let actual = (Scanner.add_token c Token.LEFT_PAREN (Some Token.IDENTIFIER)).tokens in
+    let actual = (Scanner.add_token Token.LEFT_PAREN (Some Token.IDENTIFIER) c).tokens in
     let expected = [
       Token.TokenRecord {
         literal = Some Token.IDENTIFIER;
@@ -78,7 +87,7 @@ let tests = "test scanner" >::: [
         token_type = Token.LEFT_PAREN
       }
     ] in
-    let actual = (Scanner.make_token testContext1 Token.LEFT_PAREN "(" (Some Token.IDENTIFIER)) in
+    let actual = (Scanner.make_token Token.LEFT_PAREN "(" (Some Token.IDENTIFIER) testContext1) in
     assert_equal expected actual.tokens
     );
 
@@ -125,20 +134,7 @@ let tests = "test scanner" >::: [
     assert_equal expected actual
   );
 
-  "scan_token - testing empty string" >:: (fun _ ->
-    let actual = (Scanner.scan_token testContext2).tokens in
-    let expected = [
-      Token.TokenRecord {
-        literal = Some Token.IDENTIFIER;
-        line = 1;
-        lexeme = "";
-        token_type = Token.EOF
-      }
-    ] in
-    assert_equal expected actual
-  ); *)
-
-  (* "scan_tokens - it adds EOF for a given context with an empty source into the tokens list" >:: (fun _ ->
+  "scan_tokens - it adds EOF for a given context with an empty source into the tokens list" >:: (fun _ ->
     let expected = [
       Token.TokenRecord {
         literal = Some Token.IDENTIFIER;
@@ -150,26 +146,26 @@ let tests = "test scanner" >::: [
     ] in
     let actual = (Scanner.scan_tokens testContext2).tokens in
     assert_equal expected actual
-  ); *)
+  );
 
   "scan_tokens - it adds all tokens for a given context with into the tokens list" >:: (fun _ ->
     let expected = [
       Token.TokenRecord {
         literal = Some Token.IDENTIFIER;
         line = 1;
-        lexeme = "";
+        lexeme = "(";
         token_type = Token.LEFT_PAREN
       };
       Token.TokenRecord {
         literal = Some Token.IDENTIFIER;
         line = 1;
-        lexeme = "";
+        lexeme = ")";
         token_type = Token.RIGHT_PAREN
       };
       Token.TokenRecord {
         literal = Some Token.IDENTIFIER;
         line = 1;
-        lexeme = "";
+        lexeme = ")";
         token_type = Token.EOF
       };
     ] in
