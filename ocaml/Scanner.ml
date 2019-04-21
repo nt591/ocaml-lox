@@ -57,6 +57,14 @@ module Scanner = struct
     | ( _, false) -> (false, ctx)
     | (_, _) -> (true, {ctx with current = ctx.current + 1})
 
+  let peek ctx =
+    if is_at_end ctx then None else Some (String.get ctx.source ctx.current)
+
+  let rec find_comment ctx =
+    if (peek ctx != Some '\n') && not (is_at_end ctx)
+      then find_comment (advance ctx)
+      else ctx
+
   let scan_token context =
     let ctx = advance context in
     match ctx.current_character with
@@ -91,6 +99,15 @@ module Scanner = struct
         | (true, ctx') -> add_token Token.GREATER_EQUAL (Some Token.IDENTIFIER) ctx'
         | (false, ctx') -> add_token Token.GREATER (Some Token.IDENTIFIER) ctx'
       end
+    | Some '/' ->
+        begin match (match_sign '/' ctx) with
+        | (true, ctx') -> find_comment ctx'
+        | (false, ctx') -> add_token Token.SLASH (Some Token.IDENTIFIER) ctx'
+      end
+    | Some ' ' -> ctx
+    | Some '\r' -> ctx
+    | Some '\t' -> ctx
+    | Some '\n' -> {ctx with line = ctx.line + 1}
     | _        -> error ctx "Unexpected character."
 
 
