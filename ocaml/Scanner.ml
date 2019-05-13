@@ -43,7 +43,7 @@ module Scanner = struct
 
   let is_at_end ctx = ctx.current >= String.length ctx.source
 
-  (** [match_sign expected ctx] returns boolean
+  (** [match_sign expected ctx] returns tuple of (boolean, scanner_context)
     returns (false, ctx) if is at end
     returns (false, ctx) if character of source at current (String.get source current) isn't expected
     returns (true, ctx) and increments current otherwise
@@ -60,10 +60,29 @@ module Scanner = struct
   let peek ctx =
     if is_at_end ctx then None else Some (String.get ctx.source ctx.current)
 
+  let advance_line ctx = {ctx with line = ctx.line + 1}
+
   let rec find_comment ctx =
     if (peek ctx != Some '\n') && not (is_at_end ctx)
       then find_comment (advance ctx)
       else ctx
+
+  let rec string ctx =
+    let next_is_quote = (peek ctx) = Some '"' in
+    let at_end = is_at_end ctx in
+    let advance_line_if_newline ctx =
+      if peek ctx = Some '\n' then advance_line ctx else ctx in
+    match (not next_is_quote, not at_end) with
+      | (true, true) -> advance_line_if_newline ctx |> advance |> string
+      | (_, _) ->
+        (* this gets spicy fast *)
+        if is_at_end ctx
+          then error ctx "Unterminated string"
+          else let advanced_ctx = advance ctx in
+          let string_value = (String.sub ctx.source (ctx.start + 1) (ctx.current - ctx.start)) in
+          let literal = Some (Token.STRING) in
+          make_token Token.STRING string_value literal advanced_ctx
+
 
   let scan_token context =
     let ctx = advance context in
@@ -107,11 +126,8 @@ module Scanner = struct
     | Some ' ' -> ctx
     | Some '\r' -> ctx
     | Some '\t' -> ctx
-    | Some '\n' -> {ctx with line = ctx.line + 1}
+    | Some '\n' -> advance_line ctx
     | _        -> error ctx "Unexpected character."
-
-
-
 
   let reverse_tokens ctx = {
     ctx with tokens = List.rev ctx.tokens
