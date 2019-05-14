@@ -59,6 +59,16 @@ let testContext5 : Scanner.scanner_context = {
   had_error = false;
 }
 
+let test_context_digits : Scanner.scanner_context = {
+  start = 0;
+  current = 0;
+  line = 1;
+  current_character = None;
+  source = "123 done";
+  tokens = [];
+  had_error = false;
+}
+
 let tests = "test scanner" >::: [
   "advance - it returns context with current + 1" >:: (fun _ ->
     let expected = 1 in
@@ -200,6 +210,30 @@ let tests = "test scanner" >::: [
     assert_equal expected actual
   );
 
+  "find_digits - it advances until the digits are done" >:: (fun _ ->
+    let expected : Scanner.scanner_context = {
+      start = 0;
+      current = 3;
+      line = 1;
+      current_character = Some '3';
+      source = "123 done";
+      tokens = [];
+      had_error = false;
+    } in
+    assert_equal (Scanner.find_digits test_context_digits) expected
+  );
+
+  "is_digit - returns true for some digit char" >:: (fun _ ->
+    assert_equal (Scanner.is_digit (Some '4')) true
+  );
+
+  "is_digit - returns false for some char" >:: (fun _ ->
+    assert_equal (Scanner.is_digit (Some 'c')) false
+  );
+
+  "is_digit - returns false for none" >:: (fun _ ->
+    assert_equal (Scanner.is_digit None) false
+  );
 ]
 
 let _ = run_test_tt_main tests

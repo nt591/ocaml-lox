@@ -3,7 +3,7 @@ B /Users/nikhilthomas/.opam/default/lib/bytes
 B /Users/nikhilthomas/.opam/default/lib/oUnit
 B /Users/nikhilthomas/.opam/default/lib/ocaml
 B /Users/nikhilthomas/.opam/default/lib/ounit
-B ../_build/default/ocaml/.scanner_test.eobjs/byte
+B _build/default/.scanner_test.eobjs/byte
 S /Users/nikhilthomas/.opam/default/lib/bytes
 S /Users/nikhilthomas/.opam/default/lib/oUnit
 S /Users/nikhilthomas/.opam/default/lib/ocaml

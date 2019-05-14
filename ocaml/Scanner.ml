@@ -85,7 +85,7 @@ module Scanner = struct
           then error ctx "Unterminated string"
           else let advanced_ctx = advance ctx in
           let string_value = (String.sub ctx.source (ctx.start + 1) (ctx.current - ctx.start)) in
-          let literal = Some (Token.STRING) in
+          let literal = Some (Token.STRING_LITERAL string_value) in
           make_token Token.STRING string_value literal advanced_ctx
 
   let is_digit int_option = match int_option with
@@ -102,7 +102,7 @@ module Scanner = struct
 
   let add_number_token ctx =
     let src = (String.sub ctx.source ctx.start (ctx.current - ctx.start)) in
-    make_token Token.NUMBER (float_of_string src) (Some Token.NUMBER) ctx
+    make_token Token.NUMBER src (Some (Token.NUMBER_LITERAL (float_of_string src))) ctx
 
   let scan_token context =
     let ctx = advance context in

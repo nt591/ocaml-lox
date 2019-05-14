@@ -45,7 +45,7 @@ module Token = struct
     | WHILE
     | EOF
 
-  type literal_type = IDENTIFIER | STRING | NUMBER
+  type literal_type = IDENTIFIER | STRING_LITERAL of string | NUMBER_LITERAL of float
 
   type token = TokenRecord of {
     lexeme: string;
@@ -59,8 +59,8 @@ module Token = struct
     match literal with
     | None -> ""
     | Some IDENTIFIER -> "IDENTIFIER"
-    | Some STRING -> "STRING"
-    | Some NUMBER-> "NUMBER"
+    | Some STRING_LITERAL _ -> "STRING"
+    | Some NUMBER_LITERAL _ -> "NUMBER"
 
 
   let token_type_to_string token_type =
