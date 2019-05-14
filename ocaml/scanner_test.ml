@@ -69,6 +69,26 @@ let test_context_digits : Scanner.scanner_context = {
   had_error = false;
 }
 
+let test_context_float : Scanner.scanner_context = {
+  start = 0;
+  current = 0;
+  line = 1;
+  current_character = None;
+  source = ".456 done";
+  tokens = [];
+  had_error = false;
+}
+
+let test_context_float2 : Scanner.scanner_context = {
+  start = 0;
+  current = 0;
+  line = 1;
+  current_character = None;
+  source = "123.456 done";
+  tokens = [];
+  had_error = false;
+}
+
 let tests = "test scanner" >::: [
   "advance - it returns context with current + 1" >:: (fun _ ->
     let expected = 1 in
@@ -233,6 +253,39 @@ let tests = "test scanner" >::: [
 
   "is_digit - returns false for none" >:: (fun _ ->
     assert_equal (Scanner.is_digit None) false
+  );
+
+  "find_fractional_digits - it consumes all numbers after a period" >:: (fun _ ->
+    let expected : Scanner.scanner_context = {
+      start = 0;
+      current = 4;
+      line = 1;
+      current_character = Some '6';
+      source = ".456 done";
+      tokens = [];
+      had_error = false;
+    } in
+    assert_equal (Scanner.find_fractional_digits test_context_float) expected
+  );
+
+  "add_number - it adds a token after consuming the entire float" >:: (fun _ ->
+    let expected : Scanner.scanner_context = {
+      start = 0;
+      current = 7;
+      line = 1;
+      current_character = Some '6';
+      source = "123.456 done";
+      tokens = [
+        Token.TokenRecord {
+          literal = Some (Token.NUMBER_LITERAL 123.456);
+          line = 1;
+          lexeme = "123.456";
+          token_type = Token.NUMBER
+        }
+      ];
+      had_error = false;
+    } in
+    assert_equal (Scanner.add_number test_context_float2) expected
   );
 ]
 

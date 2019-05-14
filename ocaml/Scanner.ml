@@ -104,6 +104,8 @@ module Scanner = struct
     let src = (String.sub ctx.source ctx.start (ctx.current - ctx.start)) in
     make_token Token.NUMBER src (Some (Token.NUMBER_LITERAL (float_of_string src))) ctx
 
+  let add_number ctx = ctx |> find_digits |> find_fractional_digits |> add_number_token
+
   let scan_token context =
     let ctx = advance context in
     match ctx.current_character with
@@ -147,6 +149,7 @@ module Scanner = struct
     | Some '\r' -> ctx
     | Some '\t' -> ctx
     | Some '\n' -> advance_line ctx
+    | Some a when (is_digit (Some a)) -> add_number ctx
     | _        -> error ctx "Unexpected character."
 
   let reverse_tokens ctx = {
