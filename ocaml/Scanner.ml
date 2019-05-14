@@ -60,6 +60,11 @@ module Scanner = struct
   let peek ctx =
     if is_at_end ctx then None else Some (String.get ctx.source ctx.current)
 
+  let peek_next ctx =
+    if (ctx.current + 1 > (String.length ctx.source))
+      then None
+      else Some (String.get ctx.source (ctx.current + 1))
+
   let advance_line ctx = {ctx with line = ctx.line + 1}
 
   let rec find_comment ctx =
@@ -67,13 +72,13 @@ module Scanner = struct
       then find_comment (advance ctx)
       else ctx
 
-  let rec string ctx =
+  let rec string_literal ctx =
     let next_is_quote = (peek ctx) = Some '"' in
     let at_end = is_at_end ctx in
     let advance_line_if_newline ctx =
       if peek ctx = Some '\n' then advance_line ctx else ctx in
     match (not next_is_quote, not at_end) with
-      | (true, true) -> advance_line_if_newline ctx |> advance |> string
+      | (true, true) -> advance_line_if_newline ctx |> advance |> string_literal
       | (_, _) ->
         (* this gets spicy fast *)
         if is_at_end ctx
@@ -83,6 +88,21 @@ module Scanner = struct
           let literal = Some (Token.STRING) in
           make_token Token.STRING string_value literal advanced_ctx
 
+  let is_digit int_option = match int_option with
+    | None -> false
+    | Some c -> c >= '0' && c <= '9'
+
+  let rec find_digits ctx =
+    if is_digit (peek ctx) then ctx |> advance |> find_digits
+    else ctx
+
+  let find_fractional_digits ctx = match (peek ctx), (is_digit (peek_next ctx)) with
+    | Some '.', true -> ctx |> advance |> find_digits
+    | _ -> ctx
+
+  let add_number_token ctx =
+    let src = (String.sub ctx.source ctx.start (ctx.current - ctx.start)) in
+    make_token Token.NUMBER (float_of_string src) (Some Token.NUMBER) ctx
 
   let scan_token context =
     let ctx = advance context in
